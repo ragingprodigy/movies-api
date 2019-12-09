@@ -6,8 +6,10 @@
     "type": "project",
     "require": {
         "php": "^7.2",
+        "guzzlehttp/guzzle": "^6.5",
         "laravel/lumen-framework": "^6.0",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "ext-zlib": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
