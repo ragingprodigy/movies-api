@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        IS_DEV_MODE: 1
+    command: /usr/local/bin/app/setup_and_run.sh # only for DEV mode
+    volumes:
+      - ./:/var/www/application:rw # DEV mode only
+    network_mode: "service:web"
+    env_file:
+      - docker/Api/env_files/main.env
+
+  web:
+    image: nginx:1.13
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/application:ro # DEV mode only
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:
+  cache:
+  database:
