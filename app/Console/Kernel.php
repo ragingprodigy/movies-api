@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        //
+        $schedule->exec('imdb:ratings')
+            ->twiceDaily()
+            ->name('Fetch IMDB Ratings');
     }
 }
