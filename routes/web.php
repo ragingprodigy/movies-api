@@ -11,6 +11,9 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+/** @var Router $router */
+
+use Laravel\Lumen\Routing\Router;
+
+$router->get('/', 'MoviesController@index');
+$router->get('/{id}', 'MoviesController@single');

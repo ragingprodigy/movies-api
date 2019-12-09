@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\IMDbRatingsCommand;
+use App\Console\Commands\SandboxCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         IMDbRatingsCommand::class,
+        SandboxCommand::class,
     ];
 
     /**
@@ -25,8 +27,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->exec('imdb:ratings')
-            ->twiceDaily()
-            ->name('Fetch IMDB Ratings');
+//        $schedule->exec('imdb:ratings')
+//            ->twiceDaily()
+//            ->name('Fetch IMDB Ratings');
     }
 }

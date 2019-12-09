@@ -2,9 +2,16 @@
 
 namespace App\Providers;
 
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\SQLite3Cache;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Support\ServiceProvider;
+use Tmdb\ApiToken;
+use Tmdb\Client as TmdbClient;
+use Tmdb\Helper\ImageHelper;
+use Tmdb\Repository\ConfigurationRepository;
+use Tmdb\Repository\MovieRepository;
 
 /**
  * Class AppServiceProvider.
@@ -21,5 +28,28 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ClientInterface::class, static function () {
             return new Client();
         });
+
+        $this->app->singleton(TmdbClient::class, static function () {
+            $token = new ApiToken(env('TMDB_KEY'));
+            return new TmdbClient($token, [
+                'cache' => [
+                    'handler' => new SQLite3Cache(new \SQLite3(database_path('database.sqlite')), 'tmdb_cache'),
+                ],
+            ]);
+        });
+
+        $this->app->singleton(MovieRepository::class, static function () {
+            return new MovieRepository(app(TmdbClient::class));
+        });
+
+        $this->app->singleton(ConfigurationRepository::class, static function () {
+            $config = new ConfigurationRepository(app(TmdbClient::class));
+            return $config->load();
+        });
+
+        $this->app->singleton(ImageHelper::class, static function () {
+            return new ImageHelper(app(ConfigurationRepository::class));
+        });
+
     }
 }
