@@ -112,7 +112,7 @@ class Series extends AbstractRepository
                     'id' => $castMember->getId(),
                     'name' => $castMember->getName(),
                     'character' => $castMember->getCharacter(),
-                    'details_url' => url('/person/' . $castMember->getId()),
+                    'details_url' => url('/v1/person/' . $castMember->getId()),
                 ];
             })->toArray()),
             'similar' => array_values($series->getSimilar()->map(function (string $index, $tv) {
