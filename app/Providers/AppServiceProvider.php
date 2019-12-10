@@ -12,6 +12,7 @@ use Tmdb\Client as TmdbClient;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Repository\ConfigurationRepository;
 use Tmdb\Repository\MovieRepository;
+use Tmdb\Repository\SearchRepository;
 
 /**
  * Class AppServiceProvider.
@@ -40,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(MovieRepository::class, static function () {
             return new MovieRepository(app(TmdbClient::class));
+        });
+
+        $this->app->singleton(SearchRepository::class, static function () {
+            return new SearchRepository(app(TmdbClient::class));
         });
 
         $this->app->singleton(ConfigurationRepository::class, static function () {

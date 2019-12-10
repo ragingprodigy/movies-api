@@ -15,5 +15,6 @@
 
 use Laravel\Lumen\Routing\Router;
 
-$router->get('/', 'MoviesController@index');
+$router->get('/', 'Home@index');
+$router->get('/search', 'Home@search');
 $router->get('/{id}', 'MoviesController@single');
