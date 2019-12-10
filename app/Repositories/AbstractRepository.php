@@ -61,42 +61,69 @@ abstract class AbstractRepository
     }
 
     /**
-     * @param Movie $movie
+     * @param $people
+     * @return Collection
+     */
+    protected function formatPeople($people): Collection
+    {
+        $collection = collect($people);
+
+        return $collection->map(function (Person $people) {
+            return $this->multiPersonFormatter($people);
+        });
+    }
+
+    /**
+     * @param Movie|Person\Credit $movie
      * @return array
      */
-    protected function multiMovieFormatter(Movie $movie): array
+    protected function multiMovieFormatter($movie): array
     {
-        return [
+        $formatted = [
             'details_url' => url('/movie/' . $movie->getId()),
             'adult' => $movie->getAdult(),
             'id' => $movie->getId(),
             'original_title' => $movie->getOriginalTitle(),
-            'popularity' => $movie->getPopularity(),
             'poster_image_url' => $this->imageHelper->getUrl($movie->getPosterImage(), 'w342'),
             'release_date' => $movie->getReleaseDate()->getTimestamp(),
             'title' => $movie->getTitle(),
-            'vote_average' => $movie->getVoteAverage(),
-            'vote_count' => $movie->getVoteCount(),
         ];
+
+        if ($movie instanceof  Movie) {
+            $formatted = array_merge($formatted, [
+                'popularity' => $movie->getPopularity(),
+                'vote_average' => $movie->getVoteAverage(),
+                'vote_count' => $movie->getVoteCount(),
+            ]);
+        }
+
+        return $formatted;
     }
 
     /**
-     * @param Tv $series
+     * @param Tv|Person\Credit $series
      * @return array
      */
-    protected function multiTvFormatter(Tv $series): array
+    protected function multiTvFormatter($series): array
     {
-        return [
+        $formatted = [
             'details_url' => url('/tv/' . $series->getId()),
             'first_air_date' => Optional($series->getFirstAirDate())->getTimestamp(),
             'id' => $series->getId(),
             'name' => $series->getName(),
             'original_name' => $series->getOriginalName(),
-            'popularity' => $series->getPopularity(),
             'poster_image_url' => $this->imageHelper->getUrl($series->getPosterImage(), 'w342'),
-            'vote_average' => $series->getVoteAverage(),
-            'vote_count' => $series->getVoteCount(),
         ];
+
+        if ($series instanceof Tv) {
+            $formatted = array_merge($formatted, [
+                'vote_average' => $series->getVoteAverage(),
+                'vote_count' => $series->getVoteCount(),
+                'popularity' => $series->getPopularity(),
+            ]);
+        }
+
+        return $formatted;
     }
 
     /**
@@ -119,7 +146,7 @@ abstract class AbstractRepository
      * @param Person $person
      * @return string
      */
-    private function gender(Person $person): string
+    protected function gender(Person $person): string
     {
         if ($person->isMale()) {
             return 'M';
