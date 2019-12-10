@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Optional;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Model\Movie;
 use Tmdb\Model\Person;
@@ -33,34 +32,6 @@ abstract class AbstractRepository
     public function __construct(ImageHelper $imageHelper)
     {
         $this->imageHelper = $imageHelper;
-    }
-
-    /**
-     * @param Movie|null $movie
-     * @return array|null
-     */
-    protected function movieDetail(Movie $movie = null): ?array
-    {
-        return $movie === null ? null : [
-            'id' => $movie->getId(),
-            'adult' => $movie->getAdult(),
-            'backdrop_image_url' => $this->imageHelper->getUrl($movie->getBackdropImage(), 'w1280'),
-            'budget' => $movie->getBudget(),
-            'homepage' => $movie->getHomepage(),
-            'original_title' => $movie->getOriginalTitle(),
-            'original_language' => $movie->getOriginalLanguage(),
-            'overview' => $movie->getOverview(),
-            'popularity' => $movie->getPopularity(),
-            'poster_image_url' => $this->imageHelper->getUrl($movie->getPosterImage(), 'w500'),
-            'release_date' => $movie->getReleaseDate()->getTimestamp(),
-            'revenue' => $movie->getRevenue(),
-            'runtime' => $movie->getRuntime(),
-            'status' => $movie->getStatus(),
-            'tagline' => $movie->getTagline(),
-            'title' => $movie->getTitle(),
-            'vote_average' => $movie->getVoteAverage(),
-            'vote_count' => $movie->getVoteCount(),
-        ];
     }
 
     /**
