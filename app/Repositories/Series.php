@@ -48,6 +48,34 @@ class Series extends AbstractRepository
     }
 
     /**
+     * @param array $options
+     * @return array
+     */
+    public function topRated(array $options = []): array
+    {
+        return $this->formatSeries($this->repository->getTopRated($options))->values()->all();
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    public function onAir(array $options = []): array
+    {
+        return $this->formatSeries($this->repository->getOnTheAir($options))->values()->all();
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    public function popular(array $options = []): array
+    {
+        return $this->formatSeries($this->repository->getPopular($options))
+            ->sortBy('vote_count')->values()->all();
+    }
+
+    /**
      * @param Tv|null $series
      * @return array|null
      */

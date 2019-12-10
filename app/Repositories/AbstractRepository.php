@@ -77,6 +77,19 @@ abstract class AbstractRepository
     }
 
     /**
+     * @param Tv[] $series
+     * @return Collection
+     */
+    protected function formatSeries($series): Collection
+    {
+        $collection = collect($series);
+
+        return $collection->map(function (Tv $series) {
+            return $this->multiTvFormatter($series);
+        });
+    }
+
+    /**
      * @param Movie $movie
      * @return array
      */

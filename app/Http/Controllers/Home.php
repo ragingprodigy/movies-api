@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Movies;
 use App\Repositories\Search;
+use App\Repositories\Series;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -27,16 +28,22 @@ class Home extends Controller
      * @var Search
      */
     protected $search;
+    /**
+     * @var Series
+     */
+    protected $series;
 
     /**
      * MoviesController constructor.
      * @param Movies $movies
      * @param Search $search
+     * @param Series $series
      */
-    public function __construct(Movies $movies, Search $search)
+    public function __construct(Movies $movies, Search $search, Series $series)
     {
         $this->movies = $movies;
         $this->search = $search;
+        $this->series = $series;
     }
 
     /**
@@ -45,9 +52,16 @@ class Home extends Controller
     public function index(): JsonResponse
     {
         return response()->json([
-            'top_rated' => $this->movies->topRated(),
-            'popular' => $this->movies->popular(),
-            'upcoming' => $this->movies->upcoming(),
+            'movies' => [
+                'top_rated' => $this->movies->topRated(),
+                'popular' => $this->movies->popular(),
+                'upcoming' => $this->movies->upcoming(),
+            ],
+            'series' => [
+                'top_rated' => $this->series->topRated(),
+                'popular' => $this->series->popular(),
+                'on_air' => $this->series->onAir(),
+            ],
         ]);
     }
 

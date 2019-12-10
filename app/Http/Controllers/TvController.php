@@ -32,6 +32,18 @@ class TvController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        return response()->json([
+            'top_rated' => $this->repository->topRated(),
+            'popular' => $this->repository->popular(),
+            'on_air' => $this->repository->onAir(),
+        ]);
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      */
