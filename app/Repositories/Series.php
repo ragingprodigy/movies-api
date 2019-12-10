@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use Tmdb\Helper\ImageHelper;
+use Tmdb\Model\Common\Video;
+use Tmdb\Model\Person\CastMember;
 use Tmdb\Model\Tv;
 use Tmdb\Repository\TvRepository;
 
@@ -88,6 +90,7 @@ class Series extends AbstractRepository
         return [
             'id' => $series->getId(),
             'backdrop_image_path' => $this->imageHelper->getUrl($series->getBackdropImage(), 'w1280'),
+            'created_by' => $series->getCreatedBy(),
             'episode_run_time' => $series->getEpisodeRunTime(),
             'first_air_date' => Optional($series->getFirstAirDate())->getTimestamp(),
             'last_air_date' => Optional($series->getLastAirDate())->getTimestamp(),
@@ -104,6 +107,27 @@ class Series extends AbstractRepository
             'type' => $series->getType(),
             'vote_average' => $series->getVoteAverage(),
             'vote_count' => $series->getVoteCount(),
+            'cast' => array_values($series->getCredits()->getCast()->map(static function (string $index, CastMember $castMember) {
+                return [
+                    'id' => $castMember->getId(),
+                    'name' => $castMember->getName(),
+                    'character' => $castMember->getCharacter(),
+                    'details_url' => url('/person/' . $castMember->getId()),
+                ];
+            })->toArray()),
+            'similar' => array_values($series->getSimilar()->map(function (string $index, $tv) {
+                return $this->multiTvFormatter($tv);
+            })->toArray()),
+            'recommended' => array_values($series->getRecommendations()->map(function (string $index, $tv) {
+                return $this->multiTvFormatter($tv);
+            })->toArray()),
+            'videos' => array_values($series->getVideos()->map(static function (string $index, Video $video) {
+                return [
+                    'name' => $video->getName(),
+                    'type' => $video->getType(),
+                    'url' => $video->getUrl(),
+                ];
+            })->toArray()),
         ];
     }
 }
