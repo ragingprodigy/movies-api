@@ -80,7 +80,7 @@ abstract class AbstractRepository
     protected function multiMovieFormatter($movie): array
     {
         $formatted = [
-            'details_url' => url('/movie/' . $movie->getId()),
+            'details_url' => url('/v1/movie/' . $movie->getId()),
             'adult' => $movie->getAdult(),
             'id' => $movie->getId(),
             'original_title' => $movie->getOriginalTitle(),
@@ -107,7 +107,7 @@ abstract class AbstractRepository
     protected function multiTvFormatter($series): array
     {
         $formatted = [
-            'details_url' => url('/tv/' . $series->getId()),
+            'details_url' => url('/v1/tv/' . $series->getId()),
             'first_air_date' => Optional($series->getFirstAirDate())->getTimestamp(),
             'id' => $series->getId(),
             'name' => $series->getName(),
@@ -138,7 +138,7 @@ abstract class AbstractRepository
             'profile_path' => $this->imageHelper->getUrl($person->getProfileImage(), 'w185'),
             'gender' => $this->gender($person),
             'popularity' => $person->getPopularity(),
-            'details_url' => url('/person/' . $person->getId()),
+            'details_url' => url('/v1/person/' . $person->getId()),
         ];
     }
 

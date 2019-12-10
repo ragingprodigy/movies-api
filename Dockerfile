@@ -33,3 +33,5 @@ RUN if [ -n "$IS_DEV_MODE" ]; then echo "Dev Mode... Skipping Docker and Git Cle
 RUN if [ -n "$IS_DEV_MODE" ]; then echo "Dev Mode... Skipping Docker and build script Cleanup"; else exec rm ./Dockerfile ./build.sh .editorconfig ; fi
 
 CMD /usr/local/bin/app/run.sh
+
+# tag: ragingprodigy/movie-api

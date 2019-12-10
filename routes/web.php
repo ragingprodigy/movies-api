@@ -15,11 +15,14 @@
 
 use Laravel\Lumen\Routing\Router;
 
-$router->get('/', 'Home@index');
-$router->get('/search', 'Home@search');
-$router->get('/tv', 'TvController@index');
-$router->get('/movie', 'MoviesController@index');
-$router->get('/people', 'PeopleController@index');
-$router->get('/movie/{id}', 'MoviesController@single');
-$router->get('/tv/{id}', 'TvController@single');
-$router->get('/person/{id}', 'PeopleController@single');
+$router->group(['prefix' => 'v1'], function () use ($router) {
+    $router->get('/', 'Home@index');
+    $router->get('/search', 'Home@search');
+    $router->get('/tv', 'TvController@index');
+    $router->get('/movie', 'MoviesController@index');
+    $router->get('/people', 'PeopleController@index');
+    $router->get('/movie/{id}', 'MoviesController@single');
+    $router->get('/tv/{id}', 'TvController@single');
+    $router->get('/person/{id}', 'PeopleController@single');
+});
+
