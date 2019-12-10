@@ -89,7 +89,7 @@ class Series extends AbstractRepository
 
         return [
             'id' => $series->getId(),
-            'backdrop_image_path' => $this->imageHelper->getUrl($series->getBackdropImage(), 'w1280'),
+            'backdrop_image_path' => empty($series->getBackdropPath()) ? null : $this->imageHelper->getUrl($series->getBackdropImage(), 'w1280'),
             'created_by' => $series->getCreatedBy(),
             'episode_run_time' => $series->getEpisodeRunTime(),
             'first_air_date' => Optional($series->getFirstAirDate())->getTimestamp(),
@@ -102,7 +102,7 @@ class Series extends AbstractRepository
             'original_name' => $series->getOriginalName(),
             'overview' => $series->getOverview(),
             'popularity' => $series->getPopularity(),
-            'poster_image_url' => $this->imageHelper->getUrl($series->getPosterImage(), 'w342'),
+            'poster_image_url' => empty($series->getPosterPath()) ? null : $this->imageHelper->getUrl($series->getPosterImage(), 'w342'),
             'status' => $series->getStatus(),
             'type' => $series->getType(),
             'vote_average' => $series->getVoteAverage(),
