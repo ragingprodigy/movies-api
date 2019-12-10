@@ -3,15 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Movies;
-use App\Repositories\Search;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Tmdb\Helper\ImageHelper;
-use Tmdb\Model\Movie;
-use Tmdb\Model\Review;
-use Tmdb\Repository\ConfigurationRepository;
-use Tmdb\Repository\MovieRepository;
 
 /**
  * Class MoviesController.
