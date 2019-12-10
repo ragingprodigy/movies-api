@@ -15,6 +15,13 @@
 
 use Laravel\Lumen\Routing\Router;
 
+$router->get('/', function () {
+    return [
+        'version' => trim(file_get_contents(base_path('VERSION'))),
+        'api_home' => url('/'),
+    ];
+});
+
 $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->get('/', 'Home@index');
     $router->get('/search', 'Home@search');
