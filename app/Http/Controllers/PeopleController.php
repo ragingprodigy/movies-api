@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\People;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class PeopleController.
@@ -32,12 +33,13 @@ class PeopleController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         return response()->json([
-            'popular' => $this->repository->popular(),
+            'popular' => $this->repository->popular(['page' => (int) $request->get('page', 1)]),
         ]);
     }
 

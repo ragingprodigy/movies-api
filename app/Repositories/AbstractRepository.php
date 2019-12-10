@@ -85,7 +85,7 @@ abstract class AbstractRepository
             'id' => $movie->getId(),
             'original_title' => $movie->getOriginalTitle(),
             'poster_image_url' => $this->imageHelper->getUrl($movie->getPosterImage(), 'w342'),
-            'release_date' => $movie->getReleaseDate()->getTimestamp(),
+            'release_date' => Optional($movie->getReleaseDate())->getTimestamp(),
             'title' => $movie->getTitle(),
         ];
 
