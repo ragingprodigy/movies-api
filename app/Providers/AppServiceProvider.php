@@ -30,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
     {
         URL::forceRootUrl(env('APP_URL'));
 
+        if (env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
+
         $this->app->singleton(ClientInterface::class, static function () {
             return new Client();
         });
