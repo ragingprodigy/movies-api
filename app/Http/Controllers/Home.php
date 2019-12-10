@@ -57,7 +57,7 @@ class Home extends Controller
                 'popular' => $this->movies->popular(),
                 'upcoming' => $this->movies->upcoming(),
             ],
-            'series' => [
+            'tv' => [
                 'top_rated' => $this->series->topRated(),
                 'popular' => $this->series->popular(),
                 'on_air' => $this->series->onAir(),

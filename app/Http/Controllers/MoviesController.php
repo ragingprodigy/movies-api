@@ -25,6 +25,18 @@ class MoviesController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        return response()->json([
+            'top_rated' => $this->movies->topRated(),
+            'popular' => $this->movies->popular(),
+            'upcoming' => $this->movies->upcoming(),
+        ]);
+    }
+
+    /**
      * @param int $id
      * @return JsonResponse
      */
