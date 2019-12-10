@@ -96,7 +96,7 @@ abstract class AbstractRepository
     protected function multiMovieFormatter(Movie $movie): array
     {
         return [
-            'details_url' => url('/' . $movie->getId()),
+            'details_url' => url('/movie/' . $movie->getId()),
             'adult' => $movie->getAdult(),
             'id' => $movie->getId(),
             'original_title' => $movie->getOriginalTitle(),
