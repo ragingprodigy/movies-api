@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\SQLite3Cache;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Tmdb\ApiToken;
 use Tmdb\Client as TmdbClient;
@@ -28,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        URL::forceRootUrl(env('APP_URL'));
+
         $this->app->singleton(ClientInterface::class, static function () {
             return new Client();
         });
