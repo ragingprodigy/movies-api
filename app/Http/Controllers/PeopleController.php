@@ -51,4 +51,14 @@ class PeopleController extends Controller
     {
         return response()->json($this->repository->single($id));
     }
+
+    /**
+     * @param int $id
+     * @return false|string
+     */
+    public function image(int $id)
+    {
+        $person = $this->repository->single($id);
+        return file_get_contents('http:' . $person['profile_path']);
+    }
 }

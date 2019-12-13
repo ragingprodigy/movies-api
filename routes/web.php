@@ -31,5 +31,6 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->get('/movie/{id}', 'MoviesController@single');
     $router->get('/tv/{id}', 'TvController@single');
     $router->get('/person/{id}', 'PeopleController@single');
+    $router->get('/person/{id}/image', 'PeopleController@image');
 });
 
