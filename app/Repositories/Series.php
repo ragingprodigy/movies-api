@@ -113,6 +113,7 @@ class Series extends AbstractRepository
                     'name' => $castMember->getName(),
                     'character' => $castMember->getCharacter(),
                     'details_url' => url('/v1/person/' . $castMember->getId()),
+                    'photo_url' => url('/v1/person/' . $castMember->getId() . '/image'),
                 ];
             })->toArray()),
             'similar' => array_values($series->getSimilar()->map(function (string $index, $tv) {
@@ -126,6 +127,7 @@ class Series extends AbstractRepository
                     'name' => $video->getName(),
                     'type' => $video->getType(),
                     'url' => $video->getUrl(),
+                    'thumbnail' => "https://img.youtube.com/vi/{$video->getKey()}/0.jpg"
                 ];
             })->toArray()),
         ];
