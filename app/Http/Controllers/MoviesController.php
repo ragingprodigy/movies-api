@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\Movies;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class MoviesController.
@@ -43,5 +44,32 @@ class MoviesController extends Controller
     public function single(int $id): JsonResponse
     {
         return response()->json($this->movies->single($id));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function topRated(Request $request): JsonResponse
+    {
+        return response()->json($this->movies->topRated(['page' => (int) $request->get('page', 1)]));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function upcoming(Request $request): JsonResponse
+    {
+        return response()->json($this->movies->upcoming(['page' => (int) $request->get('page', 1)]));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function popular(Request $request): JsonResponse
+    {
+        return response()->json($this->movies->popular(['page' => (int) $request->get('page', 1)]));
     }
 }
