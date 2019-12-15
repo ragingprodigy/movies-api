@@ -1,0 +1,34 @@
+name: Docker Image CI
+
+on: [push]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ragingprodigy/movie-api:${{ steps.get_version.outputs.VERSION }}
+    - name: Docker Publish
+      uses: manusa/actions-publish-docker@v1.0.1
+      with:
+        # Name of the Docker image
+        name: ragingprodigy/movie-api
+        # Tag for the Docker image
+        tag: ${{ steps.get_version.outputs.VERSION }}
+        # Script body to compute tag name for the Docker image, has context as the main function argument
+#         tag script: # optional
+        # Username used to login docker registry
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        # Password used to login docker registry
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        # Registry URL
+#         registry: # optional
+        # Don't skip pull requests
+#         include pull requests: # optional
