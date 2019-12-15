@@ -11,6 +11,7 @@ use Tmdb\ApiToken;
 use Tmdb\Client as TmdbClient;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Repository\ConfigurationRepository;
+use Tmdb\Repository\GenreRepository;
 use Tmdb\Repository\MovieRepository;
 use Tmdb\Repository\PeopleRepository;
 use Tmdb\Repository\SearchRepository;
@@ -61,6 +62,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(PeopleRepository::class, static function () {
             return new PeopleRepository(app(TmdbClient::class));
+        });
+
+        $this->app->singleton(GenreRepository::class, static function () {
+            return new GenreRepository(app(TmdbClient::class));
         });
 
         $this->app->singleton(ConfigurationRepository::class, static function () {

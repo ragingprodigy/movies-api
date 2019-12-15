@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Model\Common\Video;
 use Tmdb\Model\Movie;
@@ -66,7 +67,9 @@ class Movies extends AbstractRepository
     public function upcoming(array $options = []): array
     {
         return $this->formatMovies($this->repository->getUpcoming($options))
-            ->sortBy('release_date')->values()->all();
+            ->sortBy('release_date')->filter(static function ($movie) {
+                return Carbon::now()->isBefore(Carbon::parse($movie['release_date']));
+            })->values()->all();
     }
 
     /**
