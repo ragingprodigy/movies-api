@@ -26,13 +26,24 @@ jobs:
         echo "ragingprodigy/movie-api:${{ github.sha }}"
 
     - name: Deploy to Server
-      uses: appleboy/ssh-action@master
+      uses: JimCronqvist/action-ssh@master
       with:
-        host: ${{ secrets.SERVER_ADDRESS }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SERVER_PRIVATE_KEY }}
-        port: ${{ secrets.SERVER_PORT }}
-        script: |
+        hosts: ${{ secrets.SSH_LOGIN }}
+        privateKey: ${{ secrets.SERVER_PRIVATE_KEY }}
+        debug: true
+        command: |
           cd /home/movies-api/
           sed -i "s_movie-api.*_movie-api:${{ github.sha }}_" docker-compose.yml
           docker-compose up -d
+
+#    - name: Deploy to Server
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.SERVER_ADDRESS }}
+#        username: ${{ secrets.SERVER_USERNAME }}
+#        key: ${{ secrets.SERVER_PRIVATE_KEY }}
+#        port: ${{ secrets.SERVER_PORT }}
+#        script: |
+#          cd /home/movies-api/
+#          sed -i "s_movie-api.*_movie-api:${{ github.sha }}_" docker-compose.yml
+#          docker-compose up -d
