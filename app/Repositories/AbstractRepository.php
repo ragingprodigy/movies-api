@@ -11,6 +11,7 @@ namespace App\Repositories;
 
 use Illuminate\Support\Collection;
 use Tmdb\Helper\ImageHelper;
+use Tmdb\Model\Collection\ResultCollection;
 use Tmdb\Model\Movie;
 use Tmdb\Model\Person;
 use Tmdb\Model\Tv;
@@ -161,5 +162,18 @@ abstract class AbstractRepository
         }
 
         return '-';
+    }
+
+    /**
+     * @param $result
+     * @return array
+     */
+    protected function resultMeta(ResultCollection $result): array
+    {
+        return [
+            'page' => $result->getPage(),
+            'pages' => $result->getTotalPages(),
+            'total' => $result->getTotalResults(),
+        ];
     }
 }

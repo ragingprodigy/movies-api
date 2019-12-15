@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use Tmdb\Helper\ImageHelper;
+use Tmdb\Model\Collection\ResultCollection;
 use Tmdb\Model\Common\Video;
 use Tmdb\Model\Person\CastMember;
 use Tmdb\Model\Tv;
@@ -55,7 +56,10 @@ class Series extends AbstractRepository
      */
     public function topRated(array $options = []): array
     {
-        return $this->formatSeries($this->repository->getTopRated($options))->values()->all();
+        /** @var ResultCollection|Tv[] $result */
+        $result = $this->repository->getTopRated($options);
+
+        return $this->pagedSeries($result);
     }
 
     /**
@@ -64,7 +68,10 @@ class Series extends AbstractRepository
      */
     public function onAir(array $options = []): array
     {
-        return $this->formatSeries($this->repository->getOnTheAir($options))->values()->all();
+        /** @var ResultCollection|Tv[] $result */
+        $result = $this->repository->getOnTheAir($options);
+
+        return $this->pagedSeries($result);
     }
 
     /**
@@ -73,8 +80,13 @@ class Series extends AbstractRepository
      */
     public function popular(array $options = []): array
     {
-        return $this->formatSeries($this->repository->getPopular($options))
-            ->sortBy('vote_count')->values()->all();
+        /** @var ResultCollection|Tv[] $result */
+        $result = $this->repository->getPopular($options);
+
+        return [
+            'data' => $this->formatSeries($result)->sortByDesc('vote_count')->values()->all(),
+            'meta' => $this->resultMeta($result),
+        ];
     }
 
     /**
@@ -130,6 +142,18 @@ class Series extends AbstractRepository
                     'thumbnail' => "https://img.youtube.com/vi/{$video->getKey()}/0.jpg"
                 ];
             })->toArray()),
+        ];
+    }
+
+    /**
+     * @param $result
+     * @return array
+     */
+    private function pagedSeries($result): array
+    {
+        return [
+            'data' => $this->formatSeries($result)->values()->all(),
+            'meta' => $this->resultMeta($result),
         ];
     }
 }

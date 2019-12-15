@@ -11,6 +11,7 @@ namespace App\Repositories;
 
 use Carbon\Carbon;
 use Tmdb\Helper\ImageHelper;
+use Tmdb\Model\Collection\ResultCollection;
 use Tmdb\Model\Common\Video;
 use Tmdb\Model\Movie;
 use Tmdb\Model\Person\CastMember;
@@ -57,7 +58,12 @@ class Movies extends AbstractRepository
      */
     public function topRated(array $options = []): array
     {
-        return $this->formatMovies($this->repository->getTopRated($options))->values()->all();
+        /** @var ResultCollection|Movie[] $result */
+        $result = $this->repository->getTopRated($options);
+        return [
+            'data' => $this->formatMovies($result)->values()->all(),
+            'meta' => $this->resultMeta($result),
+        ];
     }
 
     /**
@@ -66,10 +72,16 @@ class Movies extends AbstractRepository
      */
     public function upcoming(array $options = []): array
     {
-        return $this->formatMovies($this->repository->getUpcoming($options))
-            ->sortBy('release_date')->filter(static function ($movie) {
-                return Carbon::now()->isBefore(Carbon::parse($movie['release_date']));
-            })->values()->all();
+        /** @var ResultCollection|Movie[] $result */
+        $result = $this->repository->getUpcoming($options);
+
+        return [
+            'data' => $this->formatMovies($result)
+                ->sortBy('release_date')->filter(static function ($movie) {
+                    return Carbon::now()->isBefore(Carbon::parse($movie['release_date']));
+                })->values()->all(),
+            'meta' => $this->resultMeta($result),
+        ];
     }
 
     /**
@@ -78,8 +90,12 @@ class Movies extends AbstractRepository
      */
     public function popular(array $options = []): array
     {
-        return $this->formatMovies($this->repository->getPopular($options))
-            ->sortBy('vote_count')->values()->all();
+        /** @var ResultCollection|Movie[] $result */
+        $result = $this->repository->getPopular($options);
+        return [
+            'data' => $this->formatMovies($result)->sortByDesc('vote_average')->values()->all(),
+            'meta' => $this->resultMeta($result),
+        ];
     }
 
     /**
