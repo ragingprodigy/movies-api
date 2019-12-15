@@ -1,0 +1,41 @@
+name: Docker Image CI
+
+on:
+  push:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+#     - name: Build the Docker image
+#       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: Publish Docker Action
+      uses: jerray/publish-docker-action@v1.0.3
+      with:
+        # Username used to login docker registry
+        username: $(secrets.DOCKER_HUB_USERNAME)
+        # Password used to login docker registry
+        password: $(secrets.DOCKER_HUB_PASSWORD)
+        # Docker registry server address
+#         registry: # optional
+#         # Docker file used to build image
+#         file: # optional, default is Dockerfile
+#         # Docker build context
+#         path: # optional, default is .
+        # Static image tag list, separated by comma
+        tags: latest, ${{ steps.get_version.outputs.VERSION }}
+#         # Docker build-time variables, separated by comma
+#         build_args: # optional
+#         # If allow pull request trigger build
+#         allow_pull_request: # optional
+#         # Generate tags by conditions automatically
+#         auto_tag: # optional
+#         # Images to consider as cache sources
+#         cache: # optional
