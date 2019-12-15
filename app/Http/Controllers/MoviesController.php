@@ -52,7 +52,7 @@ class MoviesController extends Controller
      */
     public function topRated(Request $request): JsonResponse
     {
-        return response()->json($this->movies->topRated(['page' => (int) $request->get('page', 1)]));
+        return response()->json($this->movies->topRated($request->all()));
     }
 
     /**
@@ -61,7 +61,7 @@ class MoviesController extends Controller
      */
     public function upcoming(Request $request): JsonResponse
     {
-        return response()->json($this->movies->upcoming(['page' => (int) $request->get('page', 1)]));
+        return response()->json($this->movies->upcoming($request->all()));
     }
 
     /**
@@ -70,6 +70,6 @@ class MoviesController extends Controller
      */
     public function popular(Request $request): JsonResponse
     {
-        return response()->json($this->movies->popular(['page' => (int) $request->get('page', 1)]));
+        return response()->json($this->movies->popular($request->all()));
     }
 }

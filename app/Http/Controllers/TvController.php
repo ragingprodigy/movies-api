@@ -50,7 +50,7 @@ class TvController extends Controller
      */
     public function topRated(Request $request): JsonResponse
     {
-        return response()->json($this->repository->topRated(['page' => (int) $request->get('page', 1)]));
+        return response()->json($this->repository->topRated($request->all()));
     }
 
     /**
@@ -59,7 +59,7 @@ class TvController extends Controller
      */
     public function onAir(Request $request): JsonResponse
     {
-        return response()->json($this->repository->onAir(['page' => (int) $request->get('page', 1)]));
+        return response()->json($this->repository->onAir($request->all()));
     }
 
     /**
@@ -68,7 +68,7 @@ class TvController extends Controller
      */
     public function popular(Request $request): JsonResponse
     {
-        return response()->json($this->repository->popular(['page' => (int) $request->get('page', 1)]));
+        return response()->json($this->repository->popular($request->all()));
     }
 
     /**
