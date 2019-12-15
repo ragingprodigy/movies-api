@@ -34,6 +34,7 @@ jobs:
         command: |
           cd /home/movies-api/
           sed -i "s_movies.*_movies-api:${{ github.sha }}_" docker-compose.yml
+          sleep 60
           docker-compose up -d
 
 #    - name: Deploy to Server
