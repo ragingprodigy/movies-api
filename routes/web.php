@@ -17,7 +17,7 @@ use Laravel\Lumen\Routing\Router;
 
 $router->get('/', function () {
     return [
-        'version' => trim(file_get_contents(base_path('VERSION'))),
+        'build_number' => env('APP_VERSION', 'dev'),
         'api_home' => url('/'),
     ];
 });
