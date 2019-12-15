@@ -21,9 +21,9 @@ jobs:
         tags: latest,${{ github.sha }}
 
     - name: Echo Full Image name
-        run: |
-          echo ${{ github.sha }}
-          echo "ragingprodigy/movie-api:${{ github.sha }}"
+      run: |
+        echo ${{ github.sha }}
+        echo "ragingprodigy/movie-api:${{ github.sha }}"
 
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
