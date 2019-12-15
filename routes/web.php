@@ -23,10 +23,10 @@ $router->get('/', function () {
 });
 
 $router->group(['prefix' => 'v1'], function () use ($router) {
-    $router->get('/', 'Home@index');
+    $router->get('/', 'HomeController@index');
     $router->get('/genres', 'GenreController@index');
 
-    $router->get('/search', 'Home@search');
+    $router->get('/search', 'HomeController@search');
 
     $router->get('/tv', 'TvController@index');
     $router->get('/tv/on-air', 'TvController@onAir');

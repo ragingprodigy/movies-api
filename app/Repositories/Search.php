@@ -56,24 +56,25 @@ class Search extends AbstractRepository
 
     /**
      * @param string $queryString
-     * @param int $page
+     * @param array $options
      * @return array
      */
-    public function movies(string $queryString, int $page = 1): array
+    public function movies(string $queryString, array $options = []): array
     {
         $query = new MovieSearchQuery();
-        $query->page($page);
+        $query->page($options['page'] ?? 1);
+        $query->includeAdult(true);
+
+        if (isset($options['year'])) {
+            $query->year($options['year']);
+        }
 
         $results = $this->repository->searchMovie($queryString, $query);
-
         return [
             'data' => array_values($results->map(function ($key, Movie $movie) {
                 return $this->multiMovieFormatter($movie) + ['overview' => $movie->getOverview() ];
             })->getAll()),
-            'meta' => [
-                'pages' => $results->getTotalPages(),
-                'total_results' => $results->getTotalResults(),
-            ],
+            'meta' => $this->resultMeta($results),
         ];
     }
 
@@ -93,10 +94,7 @@ class Search extends AbstractRepository
             'data' => array_values($results->map(function ($key, Tv $series) {
                 return $this->multiTvFormatter($series);
             })->getAll()),
-            'meta' => [
-                'pages' => $results->getTotalPages(),
-                'total_results' => $results->getTotalResults(),
-            ],
+            'meta' => $this->resultMeta($results),
         ];
     }
 
@@ -116,10 +114,7 @@ class Search extends AbstractRepository
             'data' => array_values($results->map(function ($key, Person $person) {
                 return $this->multiPersonFormatter($person);
             })->getAll()),
-            'meta' => [
-                'pages' => $results->getTotalPages(),
-                'total_results' => $results->getTotalResults(),
-            ],
+            'meta' => $this->resultMeta($results),
         ];
     }
 }

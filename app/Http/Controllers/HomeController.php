@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 /**
  * Class Home.
  */
-class Home extends Controller
+class HomeController extends Controller
 {
     /**
      * @var Movies
@@ -73,7 +73,7 @@ class Home extends Controller
     {
         $query = $request->get('q');
         return response()->json([
-            'movies' => $this->search->movies($query),
+            'movies' => $this->search->movies($query, $request->all()),
             'tv' => $this->search->tv($query),
             'people' => $this->search->people($query),
         ]);

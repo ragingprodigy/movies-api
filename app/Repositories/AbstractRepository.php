@@ -88,6 +88,9 @@ abstract class AbstractRepository
             'poster_image_url' => empty($movie->getPosterPath()) ? null : $this->imageHelper->getUrl($movie->getPosterImage(), 'w342'),
             'release_date' => Optional($movie->getReleaseDate())->getTimestamp(),
             'title' => $movie->getTitle(),
+            'genre' => $movie->getGenres()->map(static function ($i, \Tmdb\Model\Genre $genre) {
+                return $genre->getId();
+            })->toArray(),
         ];
 
         if ($movie instanceof  Movie) {
@@ -114,6 +117,9 @@ abstract class AbstractRepository
             'name' => $series->getName(),
             'original_name' => $series->getOriginalName(),
             'poster_image_url' => empty($series->getPosterPath()) ? null : $this->imageHelper->getUrl($series->getPosterImage(), 'w342'),
+            'genre' => $series->getGenres()->map(static function ($i, \Tmdb\Model\Genre $genre) {
+                return $genre->getId();
+            })->toArray(),
         ];
 
         if ($series instanceof Tv) {
