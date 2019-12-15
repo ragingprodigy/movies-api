@@ -1,7 +1,6 @@
 name: Docker Image CI
 
-on:
-  push:
+on: [push]
 
 jobs:
 
@@ -11,11 +10,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-#     - name: Build the Docker image
-#       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Publish Docker Action
       uses: jerray/publish-docker-action@v1.0.3
       with:
@@ -30,7 +24,7 @@ jobs:
 #         # Docker build context
 #         path: # optional, default is .
         # Static image tag list, separated by comma
-        tags: latest, ${{ steps.get_version.outputs.VERSION }}
+        tags: latest
 #         # Docker build-time variables, separated by comma
 #         build_args: # optional
 #         # If allow pull request trigger build
