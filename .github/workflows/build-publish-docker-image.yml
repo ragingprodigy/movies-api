@@ -36,6 +36,8 @@ jobs:
           sed -i "s_movies.*_movies-api:${{ github.sha }}_" docker-compose.yml
           sleep 60
           docker-compose up -d
+          git commit -am"Deployed version ${{ github.sha }}"
+          git push
 
 #    - name: Deploy to Server
 #      uses: appleboy/ssh-action@master
