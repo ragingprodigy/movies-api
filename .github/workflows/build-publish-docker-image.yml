@@ -20,9 +20,9 @@ jobs:
       uses: jerray/publish-docker-action@v1.0.3
       with:
         # Username used to login docker registry
-        username: $(secrets.DOCKER_HUB_USERNAME)
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
         # Password used to login docker registry
-        password: $(secrets.DOCKER_HUB_PASSWORD)
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         # Docker registry server address
 #         registry: # optional
 #         # Docker file used to build image
