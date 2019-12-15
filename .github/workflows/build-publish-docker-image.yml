@@ -33,7 +33,7 @@ jobs:
         debug: true
         command: |
           cd /home/movies-api/
-          sed -i "s_movie-api.*_movie-api:${{ github.sha }}_" docker-compose.yml
+          sed -i "s_movies.*_movies-api:${{ github.sha }}_" docker-compose.yml
           docker-compose up -d
 
 #    - name: Deploy to Server
