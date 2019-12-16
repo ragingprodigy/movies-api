@@ -55,11 +55,10 @@ class Search extends AbstractRepository
     }
 
     /**
-     * @param string $queryString
      * @param array $options
      * @return array
      */
-    public function movies(string $queryString, array $options = []): array
+    public function movies(array $options = []): array
     {
         $query = new MovieSearchQuery();
         $query->page($options['page'] ?? 1);
@@ -69,46 +68,49 @@ class Search extends AbstractRepository
             $query->year($options['year']);
         }
 
-        $results = $this->repository->searchMovie($queryString, $query);
+        $results = $this->repository->searchMovie($options['q'], $query);
         return [
             'data' => array_values($results->map(function ($key, Movie $movie) {
-                return $this->multiMovieFormatter($movie) + ['overview' => $movie->getOverview() ];
+                return $this->multiMovieFormatter($movie) + [ 'overview' => $movie->getOverview() ];
             })->getAll()),
             'meta' => $this->resultMeta($results),
         ];
     }
 
     /**
-     * @param string $queryString
-     * @param int $page
+     * @param array $options
      * @return array
      */
-    public function tv(string $queryString, int $page = 1): array
+    public function tv(array $options = []): array
     {
         $query = new TvSearchQuery();
-        $query->page($page);
+        $query->page($options['page'] ?? 1);
 
-        $results = $this->repository->searchTv($queryString, $query);
+        if (isset($options['year'])) {
+            $query->firstAirDateYear($options['year']);
+        }
+
+        $results = $this->repository->searchTv($options['q'], $query);
 
         return [
             'data' => array_values($results->map(function ($key, Tv $series) {
-                return $this->multiTvFormatter($series);
+                return $this->multiTvFormatter($series) + [ 'overview' => $series->getOverview() ];
             })->getAll()),
             'meta' => $this->resultMeta($results),
         ];
     }
 
     /**
-     * @param string $queryString
-     * @param int $page
+     * @param array $options
      * @return array
      */
-    public function people(string $queryString, int $page = 1): array
+    public function people(array $options = []): array
     {
         $query = new PersonSearchQuery();
-        $query->page($page);
+        $query->page($options['page'] ?? 1);
+        $query->includeAdult(true);
 
-        $results = $this->repository->searchPerson($queryString, $query);
+        $results = $this->repository->searchPerson($options['q'], $query);
 
         return [
             'data' => array_values($results->map(function ($key, Person $person) {

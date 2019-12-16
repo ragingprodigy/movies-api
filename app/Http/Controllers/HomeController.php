@@ -14,6 +14,7 @@ use App\Repositories\Search;
 use App\Repositories\Series;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Class Home.
@@ -68,14 +69,68 @@ class HomeController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function search(Request $request): JsonResponse
     {
-        $query = $request->get('q');
+        $params = $this->validateRequest($request, ['q', 'page', 'year']);
+
         return response()->json([
-            'movies' => $this->search->movies($query, $request->all()),
-            'tv' => $this->search->tv($query),
-            'people' => $this->search->people($query),
+            'movies' => $this->search->movies($params),
+            'tv' => $this->search->tv($params),
+            'people' => $this->search->people($params),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function searchPeople(Request $request): JsonResponse
+    {
+        $params = $this->validateRequest($request, ['q', 'page']);
+        return response()->json($this->search->people($params));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function searchMovies(Request $request): JsonResponse
+    {
+        $params = $this->validateRequest($request, ['q', 'page', 'year']);
+        return response()->json($this->search->movies($params));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function searchTv(Request $request): JsonResponse
+    {
+        $params = $this->validateRequest($request, ['q', 'page', 'year']);
+        return response()->json($this->search->tv($params));
+    }
+
+    /**
+     * @param Request $request
+     * @param array $keys
+     * @return array
+     * @throws ValidationException
+     */
+    private function validateRequest(Request $request, array $keys): array
+    {
+        $rules = [
+            'q' => 'string|required',
+            'page' => 'sometimes|numeric|min:1|max:500',
+            'year' => 'sometimes|date_format:Y',
+        ];
+
+        return $this->validate($request, array_filter($rules, static function ($key) use ($keys) {
+            return in_array($key, $keys, true);
+        }, ARRAY_FILTER_USE_KEY));
     }
 }

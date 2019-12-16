@@ -27,6 +27,9 @@ $router->group(['prefix' => 'v1'], function () use ($router) {
     $router->get('/genres', 'GenreController@index');
 
     $router->get('/search', 'HomeController@search');
+    $router->get('/search/people', 'HomeController@searchPeople');
+    $router->get('/search/movies', 'HomeController@searchMovies');
+    $router->get('/search/tv', 'HomeController@searchTv');
 
     $router->get('/tv', 'TvController@index');
     $router->get('/tv/on-air', 'TvController@onAir');
