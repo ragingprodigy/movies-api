@@ -59,11 +59,16 @@ class PeopleController extends Controller
     public function image(int $id)
     {
         $person = $this->repository->single($id);
-        $content = file_get_contents('http:' . $person['profile_path']);
 
-	return response($content)
-            ->header('Content-Type','image/jpg')->header('Pragma','public')
-            ->header('Content-Disposition','inline; filename="cast-member.png"')
-            ->header('Cache-Control','max-age=60, must-revalidate');
+        try {
+            $content = file_get_contents('http:' . $person['profile_path']);
+        } catch (\Throwable $e) {
+            $content = file_get_contents('https://www.cbkhardware.com/pub/media/catalog/product/placeholder/default/noimage-1.png');
+        }
+
+        return response($content)
+            ->header('Content-Type', 'image/jpg')->header('Pragma', 'public')
+            ->header('Content-Disposition', 'inline; filename="cast-member.png"')
+            ->header('Cache-Control', 'max-age=60, must-revalidate');
     }
 }
