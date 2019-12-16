@@ -121,7 +121,7 @@ class Series extends AbstractRepository
             'vote_count' => $series->getVoteCount(),
             'genre' => $series->getGenres()->map(static function ($i, \Tmdb\Model\Genre $genre) {
                 return $genre->getId();
-            }),
+            })->toArray(),
             'cast' => array_values($series->getCredits()->getCast()->map(static function (string $index, CastMember $castMember) {
                 return [
                     'id' => $castMember->getId(),
