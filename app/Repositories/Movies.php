@@ -123,6 +123,9 @@ class Movies extends AbstractRepository
             'title' => $movie->getTitle(),
             'vote_average' => $movie->getVoteAverage(),
             'vote_count' => $movie->getVoteCount(),
+            'genre' => $movie->getGenres()->map(static function ($i, \Tmdb\Model\Genre $genre) {
+                return $genre->getId();
+            })->toArray(),
             'cast' => array_values($movie->getCredits()->getCast()->map(static function (string $index, CastMember $castMember) {
                 return [
                     'id' => $castMember->getId(),
