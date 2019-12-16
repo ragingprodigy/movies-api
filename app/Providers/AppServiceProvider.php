@@ -7,10 +7,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use SQLite3;
 use Tmdb\ApiToken;
 use Tmdb\Client as TmdbClient;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Repository\ConfigurationRepository;
+use Tmdb\Repository\DiscoverRepository;
 use Tmdb\Repository\GenreRepository;
 use Tmdb\Repository\MovieRepository;
 use Tmdb\Repository\PeopleRepository;
@@ -43,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
             $token = new ApiToken(env('TMDB_KEY'));
             return new TmdbClient($token, [
                 'cache' => [
-                    'handler' => new SQLite3Cache(new \SQLite3(database_path('database.sqlite')), 'tmdb_cache'),
+                    'handler' => new SQLite3Cache(new SQLite3(database_path('database.sqlite')), 'tmdb_cache'),
                 ],
             ]);
         });
@@ -66,6 +68,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(GenreRepository::class, static function () {
             return new GenreRepository(app(TmdbClient::class));
+        });
+
+        $this->app->singleton(DiscoverRepository::class, static function () {
+            return new DiscoverRepository(app(TmdbClient::class));
         });
 
         $this->app->singleton(ConfigurationRepository::class, static function () {

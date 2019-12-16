@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Model\Collection\ResultCollection;
 use Tmdb\Model\Movie;
@@ -85,7 +86,7 @@ abstract class AbstractRepository
             'adult' => $movie->getAdult(),
             'id' => $movie->getId(),
             'original_title' => $movie->getOriginalTitle(),
-            'poster_image_url' => empty($movie->getPosterPath()) ? null : $this->imageHelper->getUrl($movie->getPosterImage(), 'w342'),
+            'poster_image_url' => empty($movie->getPosterPath()) || !Str::endsWith($movie->getPosterPath(), ['.jpg', '.png']) ? null : $this->imageHelper->getUrl($movie->getPosterImage(), 'w342'),
             'release_date' => Optional($movie->getReleaseDate())->getTimestamp(),
             'title' => $movie->getTitle(),
         ];
@@ -116,7 +117,7 @@ abstract class AbstractRepository
             'id' => $series->getId(),
             'name' => $series->getName(),
             'original_name' => $series->getOriginalName(),
-            'poster_image_url' => empty($series->getPosterPath()) ? null : $this->imageHelper->getUrl($series->getPosterImage(), 'w342'),
+            'poster_image_url' => empty($series->getPosterPath()) || !Str::endsWith($series->getPosterPath(), ['.jpg', '.png']) ? null : $this->imageHelper->getUrl($series->getPosterImage(), 'w342'),
         ];
 
         if ($series instanceof Tv) {
