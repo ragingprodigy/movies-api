@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Tmdb\Helper\ImageHelper;
 use Tmdb\Model\Collection\ResultCollection;
 use Tmdb\Model\Movie;
@@ -45,17 +46,9 @@ class Discover extends AbstractRepository
     public function movies(array $options = []): array
     {
         $query = new DiscoverMoviesQuery();
-        $query->includeAdult(true)->includeVideo(true)
-            ->page($options['page'] ?? 1)
-            ->withCast([]);
+        $query->includeAdult(true)->page($options['page'] ?? 1);
 
-        if (isset($options['year'])) {
-            $query->year($options['year']);
-        }
-
-        if (isset($options['cast'])) {
-            $query->withCast(explode(',', $options['cast']));
-        }
+        $this->setReleaseDateFilter($options, $query);
 
         if (isset($options['genre'])) {
             $query->withGenres(explode(',', $options['genre']));
@@ -63,9 +56,28 @@ class Discover extends AbstractRepository
 
         /** @var ResultCollection|Movie[] $result */
         $result = $this->repository->discoverMovies($query);
+        $movies = $this->formatMovies($result);
+        $meta = $this->resultMeta($result);
+
+        if (isset($options['cast']) && !empty($options['cast'])) {
+            $query = (new DiscoverMoviesQuery())->includeAdult(true)->page($options['page'] ?? 1)
+                ->withCast(explode(',', $options['cast']));
+
+            $this->setReleaseDateFilter($options, $query);
+
+            /** @var ResultCollection|Movie[] $castResult */
+            $castResult = $this->repository->discoverMovies($query);
+            $withCast = $this->formatMovies($castResult);
+
+            $movies = $movies->merge($withCast)->unique('id');
+            $castMeta = $this->resultMeta($castResult);
+
+            $meta['pages'] = max($meta['pages'], $castMeta['pages']);
+        }
+
         return [
-            'data' => $this->formatMovies($result)->values()->all(),
-            'meta' => $this->resultMeta($result),
+            'data' => $movies->values()->all(),
+            'meta' => $meta,
         ];
     }
 
@@ -78,9 +90,7 @@ class Discover extends AbstractRepository
         $query = new DiscoverTvQuery();
         $query->page($options['page'] ?? 1);
 
-        if (isset($options['year'])) {
-            $query->firstAirDateYear($options['year']);
-        }
+        $this->setFirstAirDateFilter($options, $query);
 
         if (isset($options['genre'])) {
             $query->withGenresOr(explode(',', $options['genre']));
@@ -92,5 +102,37 @@ class Discover extends AbstractRepository
             'data' => $this->formatSeries($result)->values()->all(),
             'meta' => $this->resultMeta($result),
         ];
+    }
+
+    /**
+     * @param array $options
+     * @param DiscoverMoviesQuery $query
+     */
+    private function setReleaseDateFilter(array $options, DiscoverMoviesQuery $query): void
+    {
+        if (isset($options['year'])) {
+            $years = explode(',', $options['year']);
+
+            if (count($years) === 2) {
+                $query->releaseDateGte(Carbon::now()->setYear($years[0])->startOfYear()->toDate());
+                $query->releaseDateLte(Carbon::now()->setYear($years[1])->endOfYear()->toDate());
+            }
+        }
+    }
+
+    /**
+     * @param array $options
+     * @param DiscoverTvQuery $query
+     */
+    private function setFirstAirDateFilter(array $options, DiscoverTvQuery $query): void
+    {
+        if (isset($options['year'])) {
+            $years = explode(',', $options['year']);
+
+            if (count($years) === 2) {
+                $query->firstAirDateGte(Carbon::now()->setYear($years[0])->startOfYear()->toDate());
+                $query->firstAirDateLte(Carbon::now()->setYear($years[1])->endOfYear()->toDate());
+            }
+        }
     }
 }
