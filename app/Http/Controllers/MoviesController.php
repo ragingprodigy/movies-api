@@ -33,7 +33,7 @@ class MoviesController extends Controller
         return response()->json([
             'top_rated' => $this->movies->topRated(),
             'popular' => $this->movies->popular(),
-            'upcoming' => $this->movies->upcoming(),
+            'upcoming' => array_merge($this->movies->upcoming(), $this->movies->upcoming(['page' => 2])),
         ]);
     }
 
